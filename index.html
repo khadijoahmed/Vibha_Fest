@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vibhas Sånghäfte</title>
+<style>
+/* Layout: the printed booklet pages stacked in one column, with a sticky strip of song shortcuts */
+:root{--paper:#fbe7d5;--ink:#262120;--muted:#7a6a60;color-scheme:light}
+body{background:var(--paper);color:var(--ink);font-family:Georgia,"Times New Roman",serif;padding-inline:0;padding-block:0}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:2;background:var(--paper);border-bottom:1px solid #e3c9b3;overflow-x:auto;-webkit-overflow-scrolling:touch}
+nav ol{list-style:none;margin:0;padding:.6rem 16px;display:flex;gap:.45rem;width:max-content}
+nav a{display:block;white-space:nowrap;padding:.35rem .75rem;border:1.5px solid var(--ink);border-radius:999px;color:var(--ink);text-decoration:none;font-size:.9rem}
+nav a:hover,nav a:focus-visible{background:var(--ink);color:var(--paper)}
+main{max-width:34rem;margin:0 auto;display:flex;flex-direction:column}
+main img{display:block;width:100%;height:auto;scroll-margin-top:3.2rem}
+.bingo{position:relative;scroll-margin-top:3.2rem}
+.bingo img{scroll-margin-top:0}
+.grid{position:absolute;left:3.29%;top:32.21%;width:93.42%;height:66.05%;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr)}
+.grid button{all:unset;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color .15s}
+.grid button[aria-pressed="true"]{background:rgba(38,33,32,.3)}
+.grid button:focus-visible{outline:3px solid #3b5bb5;outline-offset:-3px}
+.bingobar{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.6rem 16px 1.6rem;color:var(--muted);font-size:.9rem}
+.bingobar button{font:inherit;color:var(--ink);background:none;border:1.5px solid var(--ink);border-radius:999px;padding:.3rem .8rem;cursor:pointer}
+.pop{position:fixed;inset:0;z-index:10;background:rgba(38,33,32,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.pop[hidden]{display:none!important}
+.card{position:relative;background:var(--paper);border:2px solid #7d2027;border-radius:24px;max-width:22rem;width:100%;padding:1.4rem 1.2rem 1.2rem;text-align:center;display:flex;flex-direction:column;gap:.9rem;animation:popin .35s cubic-bezier(.2,1.4,.4,1)}
+.card img{width:100%;max-height:55vh;object-fit:contain;border-radius:12px}
+.card h3{margin:0;font:900 1.9rem/1.1 Georgia,serif;color:#7d2027}
+.card p{margin:0;font-size:1.05rem}
+.card .ok{font:inherit;font-weight:700;background:#7d2027;color:#fbe7d5;border:0;border-radius:999px;padding:.7rem 1rem;cursor:pointer}
+.card .x{position:absolute;top:.4rem;right:.5rem;font:400 1.8rem/1 Georgia,serif;background:none;border:0;color:var(--ink);cursor:pointer;padding:.2rem .5rem}
+@keyframes popin{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.card{animation:none}}
+.tip{text-align:center;font-style:italic;color:var(--muted);font-size:.85rem;padding:1rem 16px 2.5rem}
+</style>
+</head>
+<body>
+<nav aria-label="Sånger"><ol>
+  <li><a href="#bingo">Bingo</a></li>
+  <li><a href="#program">Program</a></li>
+  <li><a href="#feta">Feta Fransyskor</a></li>
+  <li><a href="#lever">Sjuka Lever</a></li>
+  <li><a href="#hell">Hell and Gore</a></li>
+  <li><a href="#liquor">Liquor store</a></li>
+  <li><a href="#punsch">Punschen kommer</a></li>
+  <li><a href="#siffer">Siffervisan</a></li>
+  <li><a href="#enhet">Enhetsvisan</a></li>
+  <li><a href="#festen">Festen ska börjas</a></li>
+</ol></nav>
+<main>
+  <img id="top" src="s1.jpg" alt="Defence Dinner in honor of Vibha Kumra Ahnlide, MD, PhD. 17th October 2026, Magle Konserthuset, Lund.">
+  <img id="program" src="s2.jpg" alt="Welcome and program: 18:00 mingle, 18:40 seats, 18:50 welcome, 19:00 dinner, 21:40 dessert, 23:00 DJ and dancing." loading="lazy">
+  <div class="bingo" id="bingo">
+    <img src="bingo.jpg" alt="Dr Vibhas bingo: 5 gånger 5 rutor med saker som kan hända under kvällen." loading="lazy">
+    <div class="grid" id="grid" aria-label="Bingorutor"></div>
+  </div>
+  <div class="bingobar"><span id="count">Tryck på en ruta för att kryssa i den.</span><button id="reset" type="button">Rensa</button></div>
+  <div class="pop" id="toast" hidden role="dialog" aria-modal="true" aria-labelledby="popt">
+    <div class="card">
+      <button class="x" type="button" aria-label="Stäng">×</button>
+      <img id="popimg" src="bingo-win.jpg" alt="Bingo! med en bild på Vibha">
+      <h3 id="popt">Congrats!</h3>
+      <p>Don't forget to shout <b>BINGO!</b></p>
+      <button class="ok" type="button">Okej!</button>
+    </div>
+  </div>
+  <img id="feta" src="s3.jpg" alt="Feta Fransyskor, melodi Schuberts militärmarsch" loading="lazy">
+  <img id="lever" src="s4.jpg" alt="Sjuka Lever, melodi Hallelujah" loading="lazy">
+  <img id="hell" src="s5.jpg" alt="Sjuka Lever fortsättning och Hell and Gore, melodi Helan går" loading="lazy">
+  <img id="liquor" src="s6.jpg" alt="The Liquor store, melodi Du käre lille snickerbo" loading="lazy">
+  <img id="punsch" src="s7.jpg" alt="Punschen kommer, melodi Glada Änkan" loading="lazy">
+  <img id="siffer" src="s8.jpg" alt="Siffervisan, melodi Ritsch, ratsch, filibom" loading="lazy">
+  <img id="enhet" src="s9.jpg" alt="Enhetsvisan, melodi Studentsången" loading="lazy">
+  <img id="festen" src="s10.jpg" alt="Festen ska börjas, melodi Vårvindar friska" loading="lazy">
+  <p class="tip">Nyp för att zooma om texten är liten. Skål, Doktor Vibha!</p>
+</main>
+<script>
+(function(){
+  var KEY='vibha-bingo', grid=document.getElementById('grid'), count=document.getElementById('count'), toast=document.getElementById('toast');
+  var marks=[]; try{marks=JSON.parse(localStorage.getItem(KEY))||[]}catch(e){}
+  if(marks.length!==25) marks=Array(25).fill(false);
+  var lines=[]; for(var i=0;i<5;i++){var r=[],c=[];for(var j=0;j<5;j++){r.push(i*5+j);c.push(j*5+i)}lines.push(r,c)}
+  lines.push([0,6,12,18,24],[4,8,12,16,20]);
+  var had=bingos(), timer;
+  function bingos(){return lines.filter(function(l){return l.every(function(k){return marks[k]})}).length}
+  function render(){
+    var n=marks.filter(Boolean).length;
+    count.textContent=n?n+' av 25 ikryssade':'Tryck på en ruta för att kryssa i den.';
+    Array.prototype.forEach.call(grid.children,function(b,k){b.setAttribute('aria-pressed',marks[k]?'true':'false')});
+  }
+  for(var k=0;k<25;k++){(function(k){
+    var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Ruta '+(Math.floor(k/5)+1)+', '+(k%5+1));
+    b.addEventListener('click',function(){
+      marks[k]=!marks[k]; try{localStorage.setItem(KEY,JSON.stringify(marks))}catch(e){}
+      var now=bingos(); if(now>had){toast.hidden=false;toast.querySelector('.ok').focus()} had=now; render();
+    });
+    grid.appendChild(b);})(k)}
+  function closePop(){toast.hidden=true}
+  toast.addEventListener('click',function(e){if(e.target===toast||e.target.closest('.x,.ok'))closePop()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closePop()});
+  var reset=document.getElementById('reset'), armed=false, rt;
+  reset.addEventListener('click',function(){
+    if(!armed){armed=true;reset.textContent='Tryck igen för att rensa';rt=setTimeout(function(){armed=false;reset.textContent='Rensa'},3000);return}
+    clearTimeout(rt);armed=false;reset.textContent='Rensa';
+    marks=Array(25).fill(false);had=0;try{localStorage.removeItem(KEY)}catch(e){}render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
