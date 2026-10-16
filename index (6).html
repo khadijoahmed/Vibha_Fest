@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vibhas Sånghäfte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,900&family=Petit+Formal+Script&display=swap">
+<style>
+/* Layout: the booklet's pages laid out like paper on a party table, a sticky song strip on top, a floating bingo shortcut */
+:root{
+  --table:#f4d9c3; --paper:#fbe7d5; --ink:#262120; --muted:#86705f; --wine:#7d2027; --wine-soft:#a8434a; --cobalt:#2f4fa8; --gold:#e8b44a;
+  --display:"Fraunces",Georgia,"Times New Roman",serif; --script:"Petit Formal Script","Snell Roundhand",cursive;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background-color:var(--table);background-image:radial-gradient(rgba(125,32,39,.09) 1.2px,transparent 1.3px);background-size:22px 22px;color:var(--ink);font-family:var(--display);-webkit-font-smoothing:antialiased}
+
+/* Top strip */
+.top{position:sticky;top:0;z-index:5;padding-top:env(safe-area-inset-top,0px);background:rgba(251,231,213,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid rgba(125,32,39,.18)}
+.brand{display:flex;align-items:baseline;justify-content:center;gap:.5rem;padding:.55rem 16px 0;color:var(--wine)}
+.brand .s{font-family:var(--script);font-size:1.15rem}
+.brand .d{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.chips{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chips ol{list-style:none;margin:0;padding:.5rem 16px .65rem;display:flex;gap:.4rem;width:max-content}
+.chips a{display:block;white-space:nowrap;padding:.38rem .8rem;border-radius:999px;border:1.5px solid var(--wine);color:var(--wine);text-decoration:none;font-size:.86rem;font-weight:600;transition:background-color .2s,color .2s}
+.chips a.on,.chips a:hover{background:var(--wine);color:var(--paper)}
+.chips a:focus-visible,button:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px}
+
+/* Pages */
+main{max-width:31rem;margin:0 auto;padding:1.6rem 16px 2rem;display:flex;flex-direction:column;gap:2.2rem}
+.page{position:relative;margin:0;scroll-margin-top:6.5rem;background:var(--paper);border-radius:4px;box-shadow:0 1px 2px rgba(60,25,20,.12),0 10px 28px -8px rgba(60,25,20,.28);transform:rotate(var(--r,0deg))}
+.page:nth-of-type(4n+1){--r:-.7deg}
+.page:nth-of-type(4n+3){--r:.6deg}
+.page img{display:block;width:100%;height:auto;border-radius:4px}
+.page.tape::before{content:"";position:absolute;top:-.7rem;left:50%;width:5.5rem;height:1.5rem;transform:translateX(-50%) rotate(-3deg);background:rgba(232,180,74,.55);box-shadow:0 1px 2px rgba(60,25,20,.12);z-index:1}
+.label{display:flex;align-items:center;gap:.6rem;color:var(--wine);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin-bottom:-1.3rem}
+.label::before,.label::after{content:"";flex:1;height:1px;background:rgba(125,32,39,.3)}
+
+/* Bingo */
+.bingo{--r:0deg}
+.grid{position:absolute;left:3.05%;top:32.05%;width:93.85%;height:66.34%;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr)}
+.grid button{all:unset;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color .15s}
+.grid button[aria-pressed="true"]{background:rgba(38,33,32,.3)}
+.grid button:focus-visible{outline:3px solid var(--cobalt);outline-offset:-3px}
+.bar{display:flex;align-items:center;gap:.9rem;margin-top:-1.2rem;padding:.75rem .9rem;background:var(--paper);border-radius:999px;box-shadow:0 6px 18px -8px rgba(60,25,20,.35)}
+.meter{flex:1;min-width:0;display:flex;flex-direction:column;gap:.35rem}
+.meter span{font-size:.85rem;font-weight:600;font-variant-numeric:tabular-nums}
+.track{height:.45rem;border-radius:999px;background:rgba(125,32,39,.14);overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,var(--wine),var(--wine-soft));border-radius:inherit;transition:width .3s}
+.reset{font:inherit;font-size:.82rem;font-weight:600;color:var(--wine);background:none;border:1.5px solid var(--wine);border-radius:999px;padding:.35rem .8rem;cursor:pointer;white-space:nowrap}
+.reset.armed{background:var(--wine);color:var(--paper)}
+
+/* Floating bingo button */
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:6;display:flex;align-items:center;gap:.4rem;padding:.7rem 1rem .7rem .8rem;border-radius:999px;background:var(--wine);color:var(--paper);text-decoration:none;font-weight:900;font-size:.95rem;letter-spacing:.04em;box-shadow:0 8px 20px -6px rgba(60,25,20,.5);transition:opacity .25s,transform .25s}
+.fab b{display:grid;place-items:center;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--gold);color:var(--ink);font-size:.8rem;font-variant-numeric:tabular-nums}
+.fab.hide{opacity:0;transform:translateY(1rem);pointer-events:none}
+
+/* Win popup */
+.pop{position:fixed;inset:0;z-index:20;background:rgba(38,33,32,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+.pop[hidden]{display:none!important}
+.card{position:relative;background:var(--paper);border:2px solid var(--wine);border-radius:24px;max-width:22rem;width:100%;padding:1.2rem 1.1rem 1.1rem;text-align:center;display:flex;flex-direction:column;gap:.8rem;animation:popin .4s cubic-bezier(.2,1.4,.4,1)}
+.card img{width:100%;max-height:50vh;object-fit:contain;border-radius:14px}
+.card h3{margin:0;font-weight:900;font-size:2rem;line-height:1.1;color:var(--wine)}
+.card p{margin:0;font-size:1.05rem}
+.card .ok{font:inherit;font-weight:900;background:var(--wine);color:var(--paper);border:0;border-radius:999px;padding:.75rem 1rem;cursor:pointer}
+.card .x{position:absolute;top:.35rem;right:.45rem;font:400 1.8rem/1 Georgia,serif;background:var(--paper);border:0;border-radius:50%;color:var(--ink);cursor:pointer;width:2.2rem;height:2.2rem}
+canvas.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:21}
+@keyframes popin{from{transform:scale(.7) rotate(-4deg);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.card{animation:none}}
+
+footer{text-align:center;padding:1rem 16px calc(6rem + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:.4rem;align-items:center}
+footer .s{font-family:var(--script);color:var(--wine);font-size:1.3rem}
+footer .big{font-weight:900;font-size:2rem;line-height:1.05;text-wrap:balance}
+footer .star{color:var(--cobalt);font-size:1.4rem}
+footer small{color:var(--muted);font-size:.8rem}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><span class="s">Defence Dinner</span><span class="d">17.10.2026 · Lund</span></div>
+  <nav class="chips" aria-label="Hoppa till"><ol id="chips">
+    <li><a href="#program">Program</a></li>
+    <li><a href="#bingo">Bingo</a></li>
+    <li><a href="#feta">Feta Fransyskor</a></li>
+    <li><a href="#lever">Sjuka Lever</a></li>
+    <li><a href="#hell">Hell and Gore</a></li>
+    <li><a href="#liquor">Liquor store</a></li>
+    <li><a href="#punsch">Punschen kommer</a></li>
+    <li><a href="#siffer">Siffervisan</a></li>
+    <li><a href="#enhet">Enhetsvisan</a></li>
+    <li><a href="#festen">Festen ska börjas</a></li>
+  </ol></nav>
+</header>
+
+<main>
+  <figure class="page tape" id="top"><img src="s1.jpg" alt="Defence Dinner in honor of Vibha Kumra Ahnlide, MD, PhD. 17th October 2026, Magle Konserthuset, Lund."></figure>
+  <figure class="page" id="program"><img src="s2.jpg" alt="Welcome and program: 18:00 mingle, 18:40 seats, 18:50 welcome, 19:00 dinner, 21:40 dessert, 23:00 DJ and dancing." loading="lazy"></figure>
+
+  <div class="label">Spela under kvällen</div>
+  <figure class="page bingo" id="bingo">
+    <img src="bingo.jpg" alt="Dr Vibhas bingo: 5 gånger 5 rutor med saker som kan hända under kvällen." loading="lazy">
+    <div class="grid" id="grid" aria-label="Bingorutor"></div>
+  </figure>
+  <div class="bar">
+    <div class="meter"><span id="count">Tryck på en ruta för att kryssa i den</span><div class="track"><div class="fill" id="fill"></div></div></div>
+    <button class="reset" id="reset" type="button">Rensa</button>
+  </div>
+
+  <div class="label">Sångerna</div>
+  <figure class="page tape" id="feta"><img src="s3.jpg" alt="Feta Fransyskor, melodi Schuberts militärmarsch" loading="lazy"></figure>
+  <figure class="page" id="lever"><img src="s4.jpg" alt="Sjuka Lever, melodi Hallelujah" loading="lazy"></figure>
+  <figure class="page" id="hell"><img src="s5.jpg" alt="Sjuka Lever fortsättning och Hell and Gore, melodi Helan går" loading="lazy"></figure>
+  <figure class="page" id="liquor"><img src="s6.jpg" alt="The Liquor store, melodi Du käre lille snickerbo" loading="lazy"></figure>
+  <figure class="page tape" id="punsch"><img src="s7.jpg" alt="Punschen kommer, melodi Glada Änkan" loading="lazy"></figure>
+  <figure class="page" id="siffer"><img src="s8.jpg" alt="Siffervisan, melodi Ritsch, ratsch, filibom" loading="lazy"></figure>
+  <figure class="page" id="enhet"><img src="s9.jpg" alt="Enhetsvisan, melodi Studentsången" loading="lazy"></figure>
+  <figure class="page tape" id="festen"><img src="s10.jpg" alt="Festen ska börjas, melodi Vårvindar friska" loading="lazy"></figure>
+</main>
+
+<footer>
+  <span class="star">✦</span>
+  <span class="big">Skål, Doktor Vibha!</span>
+  <small>Nyp för att zooma om texten är liten</small>
+</footer>
+
+<a class="fab" id="fab" href="#bingo" aria-label="Till bingot"><b id="fabn">0</b>BINGO</a>
+
+<div class="pop" id="toast" hidden role="dialog" aria-modal="true" aria-labelledby="popt">
+  <div class="card">
+    <button class="x" type="button" aria-label="Stäng">×</button>
+    <img src="bingo-win.jpg" alt="Bingo! med en bild på Vibha">
+    <h3 id="popt">Congrats!</h3>
+    <p>Don't forget to shout <b>BINGO!</b></p>
+    <button class="ok" type="button">OK!</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var KEY='vibha-bingo', grid=document.getElementById('grid'), count=document.getElementById('count'), fill=document.getElementById('fill'), toast=document.getElementById('toast'), fabn=document.getElementById('fabn');
+  var marks=[]; try{marks=JSON.parse(localStorage.getItem(KEY))||[]}catch(e){}
+  if(marks.length!==25) marks=Array(25).fill(false);
+  var lines=[]; for(var i=0;i<5;i++){var r=[],c=[];for(var j=0;j<5;j++){r.push(i*5+j);c.push(j*5+i)}lines.push(r,c)}
+  lines.push([0,6,12,18,24],[4,8,12,16,20]);
+  function bingos(){return lines.filter(function(l){return l.every(function(k){return marks[k]})}).length}
+  var had=bingos();
+  function render(){
+    var n=marks.filter(Boolean).length;
+    count.textContent=n?n+' av 25 ikryssade':'Tryck på en ruta för att kryssa i den';
+    fill.style.width=(n/25*100)+'%'; fabn.textContent=n;
+    Array.prototype.forEach.call(grid.children,function(b,k){b.setAttribute('aria-pressed',marks[k]?'true':'false')});
+  }
+  for(var k=0;k<25;k++){(function(k){
+    var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Ruta '+(Math.floor(k/5)+1)+', '+(k%5+1));
+    b.addEventListener('click',function(){
+      marks[k]=!marks[k]; try{localStorage.setItem(KEY,JSON.stringify(marks))}catch(e){}
+      var now=bingos(); if(now>had){toast.hidden=false;toast.querySelector('.ok').focus();confetti()} had=now; render();
+    });
+    grid.appendChild(b);})(k)}
+  function closePop(){toast.hidden=true}
+  toast.addEventListener('click',function(e){if(e.target===toast||e.target.closest('.x,.ok'))closePop()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closePop()});
+  var reset=document.getElementById('reset'), armed=false, rt;
+  reset.addEventListener('click',function(){
+    if(!armed){armed=true;reset.classList.add('armed');reset.textContent='Tryck igen';rt=setTimeout(function(){armed=false;reset.classList.remove('armed');reset.textContent='Rensa'},3000);return}
+    clearTimeout(rt);armed=false;reset.classList.remove('armed');reset.textContent='Rensa';
+    marks=Array(25).fill(false);had=0;try{localStorage.removeItem(KEY)}catch(e){}render();
+  });
+  render();
+
+  /* Confetti on bingo */
+  function confetti(){
+    if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var cv=document.createElement('canvas'); cv.className='confetti'; document.body.appendChild(cv);
+    var dpr=window.devicePixelRatio||1, W=cv.width=innerWidth*dpr, H=cv.height=innerHeight*dpr, ctx=cv.getContext('2d');
+    var cols=['#7d2027','#2f4fa8','#e8b44a','#f2a7b5','#4c5a2c'], ps=[];
+    for(var i=0;i<140;i++) ps.push({x:W/2,y:H*0.45,vx:(Math.random()-.5)*22*dpr,vy:(-Math.random()*20-6)*dpr,s:(4+Math.random()*6)*dpr,c:cols[i%5],a:Math.random()*6,va:(Math.random()-.5)*.4});
+    var t=0;(function step(){
+      ctx.clearRect(0,0,W,H); t++;
+      ps.forEach(function(p){p.vy+=.55*dpr;p.vx*=.985;p.x+=p.vx;p.y+=p.vy;p.a+=p.va;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore()});
+      if(t<150) requestAnimationFrame(step); else cv.remove();
+    })();
+  }
+
+  /* Highlight the current section in the strip, hide the bingo button while on the bingo card */
+  var chips=document.querySelectorAll('#chips a'), fab=document.getElementById('fab'), map={};
+  chips.forEach(function(a){map[a.getAttribute('href').slice(1)]=a});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting&&map[e.target.id]){
+        chips.forEach(function(a){a.classList.remove('on')}); var a=map[e.target.id]; a.classList.add('on');
+        var strip=a.closest('.chips'); strip.scrollTo({left:a.offsetLeft-16,behavior:'smooth'});
+      }
+    })},{rootMargin:'-40% 0px -55% 0px'});
+    document.querySelectorAll('main .page').forEach(function(p){io.observe(p)});
+    var io2=new IntersectionObserver(function(es){es.forEach(function(e){fab.classList.toggle('hide',e.isIntersecting)})},{threshold:.25});
+    io2.observe(document.getElementById('bingo'));
+  }
+})();
+</script>
+</body>
+</html>
